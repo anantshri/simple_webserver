@@ -1,0 +1,23 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
+
+	root /webroot;
+	index index.php;
+
+	server_name 172.28.128.30;
+
+	# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+	location / {
+		try_files $uri $uri/ /index.php?$args;
+	}
+
+	location ~ \.php$ {
+		try_files $uri =404;
+		include fastcgi_params;
+		fastcgi_pass unix:/var/run/php5-fpm.sock;
+		fastcgi_param SCRIPT_FILENAME $request_filename;
+		include /etc/nginx/fastcgi_params;
+
+	}
+}
