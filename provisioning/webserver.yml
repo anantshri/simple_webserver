@@ -1,6 +1,12 @@
 ---
 - hosts: all
   tasks: 
+  - name: install packages essential for packages
+    apt: pkg="{{ item }}" state=latest update_cache=yes
+    sudo: yes
+    with_items:
+    - python-apt
+    - python-pycurl
   - apt_key: url=http://www.dotdeb.org/dotdeb.gpg state=present
     sudo: yes
   - name: Configure backports
@@ -13,11 +19,9 @@
     sudo: yes
     apt_repository: repo="deb http://packages.dotdeb.org wheezy-php55 all"
   - name: install packages essential for ansible+vagrant stuff
-    apt: pkg="{{ item }}" state=latest
+    apt: pkg="{{ item }}" state=latest update_cache=yes
     sudo: yes
     with_items:
-    - python-apt
-    - python-pycurl
     - acpi
     - adduser
     - apt
